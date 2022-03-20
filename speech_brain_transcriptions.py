@@ -1,5 +1,7 @@
 from speechbrain.pretrained import EncoderDecoderASR
 from datasets import load_dataset
+import soundfile as sf
+
 
 asr_model = EncoderDecoderASR.from_hparams(source="speechbrain/asr-crdnn-rnnlm-librispeech", savedir="pretrained_models/asr-crdnn-rnnlm-librispeech")
 
