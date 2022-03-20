@@ -33,19 +33,24 @@ print('Start decoding ...')
 transcriptions = []
 for audio_file in ds["speech"]:
     inputs = processor(audio_file, sampling_rate=16_000, return_tensors="pt")
-    generated_ids = model.generate(inputs=inputs["input_features"], attention_mask=inputs["attention_mask"])
+    generated_ids = model.generate(input_ids=inputs["input_features"], attention_mask=inputs["attention_mask"])
     transcriptions.append(processor.batch_decode(generated_ids))
 
 print('Load ground truth ...')
 ground_truth = [t.lower() for t in ds['text']]
 
-with open(f"wer_{model_name}_validation",'w') as writer:
-     writer.write(f"WER : {str(wer(ground_truth,transcriptions))}")
 
 print('Dumping transcriptions of the model')
-with open(f"transcripts_{model_name}_validation",'w') as writer:
-    for transcript in transcriptions:
-        writer.write(transcript+'\n')
+with open(f"transcripts_{model_name.split('/')[-1]}_validation",'w') as writer:
+        for transcript in transcriptions:
+            #print(type(transcript))        
+            writer.write(transcript[0]+'\n')
+
+
+with open(f"wer_{model_name.split('/')[-1]}_validation",'w') as writer:
+     _wer = wer(ground_truth, transcriptions)
+     print(type(_wer))
+     writer.write(f"WER : {str(_wer[0])}")
 
 
 
